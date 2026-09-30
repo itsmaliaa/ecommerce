@@ -55,48 +55,90 @@ export const ArtistsDirectoryView: React.FC<ArtistsDirectoryViewProps> = ({
       return 0;
     });
 
+  const topPopularArtists = [...artists]
+    .sort((a, b) => b.followers - a.followers)
+    .slice(0, 6);
+
   return (
     <div className="w-full bg-[#FAF9F6] min-h-screen py-6 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        {/* Controls: Type of Art dropdown & Sort by (Most Hearts) dropdown */}
-        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-neutral-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
+        {/* Top Part: Top Popular Artists (Small, simple, space-saving) */}
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-neutral-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 shrink-0">
+            <Sparkles className="w-4 h-4 text-red-600" />
+            <span className="text-xs font-bold text-slate-900 tracking-wide uppercase">
+              Top Popular Artists
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            {topPopularArtists.map((artist) => (
+              <button
+                key={artist.id}
+                onClick={() => onSelectArtist(artist)}
+                className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-neutral-50 hover:bg-red-50 hover:border-red-200 border border-neutral-200/80 transition-all text-left shrink-0 cursor-pointer group"
+                title={`View ${artist.name}`}
+              >
+                <img
+                  src={artist.avatar}
+                  alt={artist.name}
+                  className="w-5 h-5 rounded-full object-cover ring-1 ring-neutral-300"
+                />
+                <span className="text-xs font-semibold text-slate-800 group-hover:text-red-600 truncate max-w-[100px]">
+                  {artist.name}
+                </span>
+                <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.2 rounded-full">
+                  ★ {artist.rating}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Controls: Type of Art & Compact System-Themed Sort By Button */}
+        <div className="bg-white rounded-2xl p-3 sm:p-4 border border-neutral-200/80 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Showing Count */}
-          <div className="text-xs sm:text-sm font-semibold text-neutral-600">
+          <div className="text-xs font-semibold text-neutral-500">
             Showing <span className="font-bold text-slate-900">{filteredArtists.length}</span> of {artists.length} artists
           </div>
 
-          {/* Both Dropdowns */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            {/* 1. Sort / Filter by What Type of Art Dropdown */}
-            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-500">
-              <span className="whitespace-nowrap">Type of Art:</span>
+          {/* Simple Button-Style Controls in System Red Palette */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* 1. Type of Art Filter */}
+            <div className="relative inline-flex items-center">
               <select
                 value={selectedArtType}
                 onChange={(e) => setSelectedArtType(e.target.value)}
-                className="border border-neutral-200 hover:border-neutral-300 rounded-xl px-3.5 py-2 bg-neutral-50/70 text-slate-900 font-bold focus:bg-white focus:outline-none focus:ring-1 focus:ring-red-400 cursor-pointer transition-colors shadow-2xs text-xs"
+                className="appearance-none pl-3 pr-7 py-1.5 bg-neutral-100 hover:bg-neutral-200/70 border border-neutral-200 rounded-full text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-red-400 cursor-pointer transition-colors shadow-2xs"
               >
                 {artTypes.map((type) => (
                   <option key={type} value={type}>
-                    {type === 'All' ? `All Types of Art (${artists.length})` : `${type} (${getArtTypeCount(type)})`}
+                    {type === 'All' ? `All Types (${artists.length})` : `${type} (${getArtTypeCount(type)})`}
                   </option>
                 ))}
               </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 text-[10px]">
+                ▼
+              </div>
             </div>
 
-            {/* 2. Sort By Dropdown (Most Hearts dropdown) */}
-            <div className="flex items-center gap-2 text-xs font-semibold text-neutral-500">
-              <span className="whitespace-nowrap">Sort by:</span>
+            {/* 2. Sort By Button in System Color (Simple button style, no big border) */}
+            <div className="relative inline-flex items-center">
+              <span className="text-xs font-bold text-red-700 mr-1.5 hidden sm:inline">Sort:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="border border-neutral-200 hover:border-neutral-300 rounded-xl px-3.5 py-2 bg-neutral-50/70 text-slate-900 font-bold focus:bg-white focus:outline-none focus:ring-1 focus:ring-red-400 cursor-pointer transition-colors shadow-2xs text-xs"
+                className="appearance-none pl-3 pr-7 py-1.5 bg-red-50 hover:bg-red-100/80 border border-red-200 text-red-700 rounded-full text-xs font-bold focus:outline-none focus:ring-1 focus:ring-red-500 cursor-pointer transition-colors shadow-2xs"
               >
                 <option value="hearts">Most Hearts</option>
                 <option value="artworks">Most Artworks</option>
                 <option value="sales">Acquisitions Sold</option>
                 <option value="rating">Highest Rated</option>
-                <option value="name">Artist Name (A-Z)</option>
+                <option value="name">Name (A-Z)</option>
               </select>
+              <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-red-600 text-[10px]">
+                ▼
+              </div>
             </div>
           </div>
         </div>

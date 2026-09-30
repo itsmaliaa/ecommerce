@@ -163,25 +163,17 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
   );
 
   return (
-    <div className="w-full bg-[#FAF9F6] min-h-screen py-8 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        {/* Curatorial Header */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-[#E52535] border border-red-100 uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>CAFA Curatorial Exhibition Salon</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Featured Artist Pavilions & Masterworks
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-              Explore juried collections presented by emerging Academy artists. In this gallery exhibition, community resonance is celebrated through visitor hearts rather than commercial ratings.
-            </p>
+    <div className="w-full bg-[#FAF9F6] min-h-screen py-6 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Exhibition Wing Navigation */}
+        <div className="flex items-center justify-between gap-4 border-b border-neutral-200/80 pb-4">
+          <div className="flex items-center gap-2">
+            <Compass className="w-4 h-4 text-red-600" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
+              Exhibition Wings
+            </span>
           </div>
-
-          {/* Exhibition Wing Navigation */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2">
             {wings.map((wing) => (
               <button
                 key={wing}
@@ -189,7 +181,7 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   selectedWing === wing
                     ? 'bg-[#E52535] text-white shadow-xs'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    : 'bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200/80'
                 }`}
               >
                 {wing}

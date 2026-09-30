@@ -18,6 +18,7 @@ import {
   KeyRound,
   CreditCard,
   LogOut,
+  Store,
 } from 'lucide-react';
 import { MarketplaceTab, ViewMode, BuyerTab } from '../types';
 
@@ -147,6 +148,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                     Buyer Profile (Ana Reyes)
                   </span>
                   {currentViewMode === 'buyer_profile' && <Check className="w-3.5 h-3.5" />}
+                </button>
+                <button
+                  onClick={() => {
+                    onChangeViewMode('seller_portal');
+                    setShowPortalMenu(false);
+                  }}
+                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-neutral-50 transition-colors ${
+                    currentViewMode === 'seller_portal' ? 'text-red-600 font-bold bg-red-50/50' : 'text-slate-700'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <Store className="w-3.5 h-3.5 text-red-600" />
+                    Seller Portal (Malia J - Student Artist)
+                  </span>
+                  {currentViewMode === 'seller_portal' && <Check className="w-3.5 h-3.5" />}
                 </button>
                 <button
                   onClick={() => {

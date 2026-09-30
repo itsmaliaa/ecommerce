@@ -20,6 +20,10 @@ import {
   AuditLogItem,
   CartItem,
   ArtistDirectoryItem,
+  SellerTab,
+  SellerOrderTransaction,
+  VoucherItem,
+  SellerAnnouncement,
 } from './types';
 import {
   initialArtworks,
@@ -32,6 +36,9 @@ import {
   initialStrikes,
   initialAuditLogs,
   initialArtistsDirectory,
+  initialSellerTransactions,
+  initialVouchers,
+  initialSellerAnnouncements,
 } from './data/mockData';
 
 // Public Components
@@ -45,6 +52,10 @@ import { ToastContainer, ToastMessage } from './components/Toast';
 import { AdminSidebar } from './components/AdminSidebar';
 import { AdminHeader } from './components/AdminHeader';
 
+// Seller Components
+import { SellerSidebar } from './components/seller/SellerSidebar';
+import { SellerHeader } from './components/seller/SellerHeader';
+
 // Marketplace Views
 import { HomeView } from './views/HomeView';
 import { ShopView } from './views/ShopView';
@@ -55,6 +66,18 @@ import { HeartsView } from './views/HeartsView';
 
 // Buyer Views
 import { BuyerProfileView } from './views/BuyerProfileView';
+
+// Seller Views
+import { SellerOrderView } from './views/seller/SellerOrderView';
+import { SellerDashboardView } from './views/seller/SellerDashboardView';
+import { SellerArtVerificationView } from './views/seller/SellerArtVerificationView';
+import { SellerMarketingView } from './views/seller/SellerMarketingView';
+import { SellerFinanceView } from './views/seller/SellerFinanceView';
+import { SellerMessagesView } from './views/seller/SellerMessagesView';
+import { SellerGalleryView } from './views/seller/SellerGalleryView';
+import { SellerVoucherGeneratorView } from './views/seller/SellerVoucherGeneratorView';
+import { SellerLogsView } from './views/seller/SellerLogsView';
+import { SellerStockView } from './views/seller/SellerStockView';
 
 // Admin Views
 import { AdminDashboardView } from './views/admin/AdminDashboardView';
@@ -72,6 +95,7 @@ export default function App() {
   const [marketplaceTab, setMarketplaceTab] = useState<MarketplaceTab>('home');
   const [buyerTab, setBuyerTab] = useState<BuyerTab>('orders');
   const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
+  const [sellerTab, setSellerTab] = useState<SellerTab>('order');
 
   // Core Data States
   const [artworks, setArtworks] = useState<Artwork[]>(initialArtworks);
@@ -87,6 +111,27 @@ export default function App() {
   const [selectedArtistProfile, setSelectedArtistProfile] = useState<ArtistDirectoryItem | null>(null);
   const [directoryArtType, setDirectoryArtType] = useState<string>('All');
   const [isAllCategoriesOpen, setIsAllCategoriesOpen] = useState<boolean>(false);
+
+  // Seller Portal State
+  const [sellerTransactions, setSellerTransactions] = useState<SellerOrderTransaction[]>(initialSellerTransactions);
+  const [vouchers, setVouchers] = useState<VoucherItem[]>(initialVouchers);
+  const [announcements, setAnnouncements] = useState<SellerAnnouncement[]>(initialSellerAnnouncements);
+  const [sellerSearch, setSellerSearch] = useState('');
+
+  const handleAddAnnouncement = (newAnn: SellerAnnouncement) => {
+    setAnnouncements((prev) => [newAnn, ...prev]);
+  };
+
+  const handleDeleteAnnouncement = (id: string) => {
+    setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+    showToast('Announcement Removed', 'The announcement was removed from your profile.', 'info');
+  };
+
+  const handleUpdateArtworkStock = (artworkId: string, newStock: number) => {
+    setArtworks((prev) =>
+      prev.map((art) => (art.id === artworkId ? { ...art, stock: newStock } : art))
+    );
+  };
 
   // Cart State (Initialized with 2 items to match the badge 2 in the screenshots!)
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -541,8 +586,121 @@ export default function App() {
             </main>
           </div>
         </div>
+      ) : viewMode === 'seller_portal' ? (
+        /* 2. SELLER PORTAL (STUDENT ARTIST) - Matches Seller Navigation bar.png design */
+        <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+          {/* Seller Header */}
+          <SellerHeader
+            searchQuery={sellerSearch}
+            onSearchChange={setSellerSearch}
+            currentViewMode={viewMode}
+            onChangeViewMode={setViewMode}
+            onOpenSettings={() => setSellerTab('finance')}
+          />
+
+          {/* Seller Layout: Curved Burgundy Sidebar & Routed Views */}
+          <div className="flex flex-1">
+            <SellerSidebar
+              currentTab={sellerTab}
+              onSelectTab={setSellerTab}
+              unreadMessagesCount={1}
+              pendingVerificationCount={1}
+            />
+
+            {/* Seller Main Content */}
+            <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full min-w-0">
+              {sellerTab === 'order' && (
+                <SellerOrderView
+                  transactions={sellerTransactions}
+                  onShowToast={showToast}
+                  onNavigateTab={setSellerTab}
+                />
+              )}
+
+              {sellerTab === 'dashboard' && (
+                <SellerDashboardView
+                  onNavigateTab={setSellerTab}
+                  artworks={artworks}
+                  transactions={sellerTransactions}
+                  announcements={announcements}
+                  onAddAnnouncement={handleAddAnnouncement}
+                  onShowToast={showToast}
+                />
+              )}
+
+              {sellerTab === 'art_verification' && (
+                <SellerArtVerificationView
+                  artworks={artworks}
+                  onShowToast={showToast}
+                />
+              )}
+
+              {(sellerTab === 'marketing' || sellerTab === 'promotions') && (
+                <SellerMarketingView
+                  announcements={announcements}
+                  onAddAnnouncement={handleAddAnnouncement}
+                  onDeleteAnnouncement={handleDeleteAnnouncement}
+                  onShowToast={showToast}
+                />
+              )}
+
+              {sellerTab === 'finance' && (
+                <SellerFinanceView
+                  transactions={sellerTransactions}
+                  onShowToast={showToast}
+                />
+              )}
+
+              {sellerTab === 'messages' && (
+                <SellerMessagesView
+                  onShowToast={showToast}
+                />
+              )}
+
+              {sellerTab === 'artist_gallery' && (
+                <SellerGalleryView
+                  artworks={artworks}
+                  onSelectArtwork={(art) => setSelectedArtworkModal(art)}
+                  onShowToast={showToast}
+                  onNavigateToVerification={() => setSellerTab('art_verification')}
+                />
+              )}
+
+              {sellerTab === 'voucher_generator' && (
+                <SellerVoucherGeneratorView
+                  initialVouchers={vouchers}
+                  onShowToast={showToast}
+                  mode="voucher"
+                />
+              )}
+
+              {sellerTab === 'discount_code' && (
+                <SellerVoucherGeneratorView
+                  initialVouchers={vouchers}
+                  onShowToast={showToast}
+                  mode="discount"
+                />
+              )}
+
+              {sellerTab === 'stock' && (
+                <SellerStockView
+                  artworks={artworks}
+                  onUpdateArtworkStock={handleUpdateArtworkStock}
+                  onShowToast={showToast}
+                  onNavigateToGallery={() => setSellerTab('artist_gallery')}
+                />
+              )}
+
+              {sellerTab === 'logs' && (
+                <SellerLogsView
+                  onShowToast={showToast}
+                />
+              )}
+            </main>
+          </div>
+        </div>
       ) : (
-        /* 2. MARKETPLACE & BUYER PROFILE Views */
+        /* 3. MARKETPLACE & BUYER PROFILE Views */
         <div className="flex-1 flex flex-col">
           {/* Public Top Navbar */}
           <Navbar

@@ -1,6 +1,7 @@
 export type ViewMode = 
   | 'marketplace' 
   | 'buyer_profile' 
+  | 'seller_portal'
   | 'admin_portal';
 
 export type MarketplaceTab = 
@@ -10,6 +11,59 @@ export type MarketplaceTab =
   | 'artist_profile' 
   | 'gallery' 
   | 'hearts';
+
+export type SellerTab = 
+  | 'dashboard'
+  | 'order'
+  | 'shipping_fulfillment'
+  | 'art_verification'
+  | 'marketing'
+  | 'finance'
+  | 'messages'
+  | 'artist_gallery'
+  | 'voucher_generator'
+  | 'discount_code'
+  | 'promotions'
+  | 'logs'
+  | 'stock';
+
+export interface SellerOrderTransaction {
+  id: string;
+  artwork: string;
+  artist: string;
+  buyer: string;
+  date: string;
+  grossAmount: number;
+  platformTakeRate: number; // 0%
+  platformTakeAmount: number; // 0
+  netStudentPayout: number;
+  status: 'Completed' | 'Pending' | 'Shipped' | 'Cancelled';
+}
+
+export interface VoucherItem {
+  id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minSpend: number;
+  usageLimit: number;
+  usedCount: number;
+  expiresAt: string;
+  status: 'Active' | 'Expired' | 'Draft';
+}
+
+export interface SellerAnnouncement {
+  id: string;
+  title: string;
+  type: 'sale' | 'booth' | 'exhibition';
+  description: string;
+  locationOrBooth?: string;
+  dateRange: string;
+  discountPromo?: string;
+  status: 'Active' | 'Scheduled';
+  createdAt: string;
+  viewsCount?: number;
+}
 
 export interface ArtistDirectoryItem {
   id: string;
@@ -78,6 +132,8 @@ export interface Artwork {
   style?: string;
   isFavorited?: boolean;
   heartsCount?: number;
+  stock?: number;
+  editionType?: 'Original 1/1' | 'Limited Edition' | 'Art Print';
 }
 
 export interface RankedArtist {

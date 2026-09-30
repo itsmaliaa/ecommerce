@@ -103,10 +103,19 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               </div>
               <button
                 onClick={() => {
+                  onChangeViewMode('seller_portal');
+                  setShowUserDropdown(false);
+                }}
+                className="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-neutral-50 flex items-center gap-2 cursor-pointer font-medium"
+              >
+                <span>Switch to Seller Portal (Malia J)</span>
+              </button>
+              <button
+                onClick={() => {
                   onChangeViewMode('buyer_profile');
                   setShowUserDropdown(false);
                 }}
-                className="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-neutral-50 flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-neutral-50 flex items-center gap-2 cursor-pointer"
               >
                 <span>View Buyer Account (Ana Reyes)</span>
               </button>

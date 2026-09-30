@@ -9,6 +9,9 @@ import {
   StrikeUser,
   AuditLogItem,
   ArtistDirectoryItem,
+  SellerOrderTransaction,
+  VoucherItem,
+  SellerAnnouncement,
 } from '../types';
 
 // Real generated high-fidelity artwork paths
@@ -828,3 +831,72 @@ export const initialArtistsDirectory: ArtistDirectoryItem[] = [
     isFollowed: false,
   },
 ];
+
+// Seller Portal Orders & Transactions
+export const initialSellerTransactions: SellerOrderTransaction[] = [
+  {
+    id: 'tx-1',
+    artwork: 'Abstract Horizons',
+    artist: 'Jeremi Johnson',
+    buyer: 'Maria Santos',
+    date: 'Aug 28, 2026',
+    grossAmount: 12000,
+    platformTakeRate: 0,
+    platformTakeAmount: 0,
+    netStudentPayout: 12000,
+    status: 'Completed',
+  },
+];
+
+// Seller Vouchers
+export const initialVouchers: VoucherItem[] = [
+  {
+    id: 'vch-1',
+    code: 'REDNEXUS10',
+    discountType: 'percentage',
+    discountValue: 10,
+    minSpend: 2500,
+    usageLimit: 100,
+    usedCount: 42,
+    expiresAt: '2026-12-31',
+    status: 'Active',
+  },
+  {
+    id: 'vch-2',
+    code: 'CAFASTUDENT',
+    discountType: 'fixed',
+    discountValue: 500,
+    minSpend: 3000,
+    usageLimit: 50,
+    usedCount: 19,
+    expiresAt: '2026-11-15',
+    status: 'Active',
+  },
+  {
+    id: 'vch-3',
+    code: 'EXPO2026',
+    discountType: 'percentage',
+    discountValue: 15,
+    minSpend: 5000,
+    usageLimit: 30,
+    usedCount: 28,
+    expiresAt: '2026-10-31',
+    status: 'Active',
+  },
+];
+
+// Seller Marketing Announcements (Physical Booth Stand Notices)
+export const initialSellerAnnouncements: SellerAnnouncement[] = [
+  {
+    id: 'ann-1',
+    title: 'Physical Booth Stand: Manila Biennale Student Pavilion #B14',
+    type: 'booth',
+    description: 'Visit my physical booth stand! Showcasing live easel painting, oil studies, and limited edition student prints.',
+    locationOrBooth: 'Booth Stand #B14 · University Fine Arts Quadrangle',
+    dateRange: 'Oct 18 - 20, 2026 · 9:00 AM - 6:00 PM',
+    status: 'Active',
+    createdAt: 'Sep 25, 2026',
+    viewsCount: 640,
+  },
+];
+
